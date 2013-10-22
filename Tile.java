@@ -6,6 +6,7 @@ public class Tile
 	private int x_position, y_position;
 	private int width, height;
 	private boolean isSelected;
+	private Piece pieceOnTile;
 	
 	public Tile (int start_x, int start_y, int startWidth, int startHeight, boolean startSelected)
 	{
@@ -36,6 +37,10 @@ public class Tile
 	public boolean get_selected()
 	{
 		return this.isSelected;
+	}
+	public Piece getPieceOnTile()
+	{
+		return this.pieceOnTile;
 	}
 	
 	// Setters
