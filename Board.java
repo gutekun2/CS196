@@ -19,8 +19,8 @@ public class Board {
 	public void addTile(Tile newTile, int x, int y)
 	{
 		this.tiles[x][y] = newTile;
-		newTile.set_x_position(x);
-		newTile.set_y_position(y);
+		newTile.setX(x);
+		newTile.setY(y);
 	}
 		
 }

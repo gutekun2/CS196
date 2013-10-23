@@ -10,8 +10,8 @@ public class GamePanel extends JPanel implements MouseListener
 {
 	//public static int ASSUMED_HEIGHT = 480;
 	//public static int ASSUMED_WIDTH = 640;
-	public static final int NUM_TILES_HEIGHT = 4;
-	public static final int NUM_TILES_WIDTH = 8;
+	public static final int NUM_TILES_HEIGHT = 9;
+	public static final int NUM_TILES_WIDTH = 9;
 	private Tile[][] tiles;
 	
 	public GamePanel(int height, int width)
@@ -31,6 +31,8 @@ public class GamePanel extends JPanel implements MouseListener
 			for(int j = 0; j < NUM_TILES_HEIGHT; j++)
 			{
 				tiles[i][j] = (new Tile((int)(tileWidth + (i * tileWidth)) , (int)(tileHeight + (j * tileHeight)) , (int)tileWidth, (int)tileHeight, false));
+				if(i==3&&j==3);
+					tiles[i][j].addPawn();
 			}
 		}
 	}
@@ -47,7 +49,7 @@ public class GamePanel extends JPanel implements MouseListener
 			for(int j = 0; j < NUM_TILES_HEIGHT; j++)
 			{
 				Tile t = tiles[i][j];
-				t.draw(g);
+				t.draw(g,this);
 				g.setColor(Color.WHITE);
 				g.drawRect(t.get_x_position(), t.get_y_position(), t.get_width(), t.get_height());
 			}
@@ -89,7 +91,7 @@ public class GamePanel extends JPanel implements MouseListener
 			for(int j = 0; j < NUM_TILES_HEIGHT; j++)
 			{
 				if(tiles[i][j].isIn(x,y))
-					tiles[i][j].set_selection(!tiles[i][j].get_selected());
+					tiles[i][j].setIsSelected(!tiles[i][j].get_selected());
 			}
 		}
 	}
