@@ -8,52 +8,33 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements MouseListener
 {
-	//public static int ASSUMED_HEIGHT = 480;
-	//public static int ASSUMED_WIDTH = 640;
-	public static final int NUM_TILES_HEIGHT = 9;
-	public static final int NUM_TILES_WIDTH = 9;
-	private Tile[][] tiles;
+	private Board gameBoard;
+	private int currentPhase;
 	
 	public GamePanel(int height, int width)
 	{
 		super();
 		addMouseListener(this);
-		
-		tiles = new Tile[NUM_TILES_WIDTH][NUM_TILES_HEIGHT];
-		
-		double tileHeight = height / (NUM_TILES_HEIGHT * 1.0 + 2);
-		double tileWidth = width / (NUM_TILES_WIDTH * 1.0 + 2);
-		
-		
-		
-		for(int i = 0; i < NUM_TILES_WIDTH; i++)
-		{
-			for(int j = 0; j < NUM_TILES_HEIGHT; j++)
-			{
-				tiles[i][j] = (new Tile((int)(tileWidth + (i * tileWidth)) , (int)(tileHeight + (j * tileHeight)) , (int)tileWidth, (int)tileHeight, false));
-				if(i==3&&j==3);
-					tiles[i][j].addPawn();
-			}
-		}
+		gameBoard = new Board(getWidth()/16, getHeight()/16,getWidth()/8*7,getHeight()/8*7);
+		currentPhase = 1;
 	}
 	
-	public void paint(Graphics g)
+	public void paintComponent(Graphics g)
 	{
+		super.paintComponent(g);
 		draw(g);
 	}
 	
 	public void draw(Graphics g)
 	{
-		for(int i = 0; i < NUM_TILES_WIDTH; i++)
-		{
-			for(int j = 0; j < NUM_TILES_HEIGHT; j++)
-			{
-				Tile t = tiles[i][j];
-				t.draw(g,this);
-				g.setColor(Color.WHITE);
-				g.drawRect(t.get_x_position(), t.get_y_position(), t.get_width(), t.get_height());
-			}
-		}
+		gameBoard.update(getWidth()/16, getHeight()/16, getWidth()/8*7, getHeight()/8*7);
+		gameBoard.draw(g, this);
+	}
+	
+	public void setPhase(int phase)
+	{
+		currentPhase=phase;
+		
 	}
 	
 	public void act()
@@ -85,15 +66,14 @@ public class GamePanel extends JPanel implements MouseListener
 	{
 		int x = arg0.getX();
 		int y = arg0.getY();
+		int gX = gameBoard.getX();
+		int gY = gameBoard.getY();
 		
-		for(int i = 0; i < NUM_TILES_WIDTH; i++)
+		if(x>gX && x<gX + gameBoard.getWidth() && y>gY && y<gY + gameBoard.getHeight())
 		{
-			for(int j = 0; j < NUM_TILES_HEIGHT; j++)
-			{
-				if(tiles[i][j].isIn(x,y))
-					tiles[i][j].setIsSelected(!tiles[i][j].get_selected());
-			}
+			gameBoard.clicked(x-gX, y-gY, arg0.getButton()==MouseEvent.BUTTON1);
 		}
+		
 	}
 
 	@Override

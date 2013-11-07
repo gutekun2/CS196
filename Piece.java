@@ -15,6 +15,7 @@ public abstract class Piece {
 		width=0;
 		height=0;
 	}
+	
 	public Piece(String imageName, int x, int y, int width, int height)
 	{
 		setImageString(imageName);

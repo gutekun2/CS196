@@ -1,26 +1,142 @@
-public class Board {
-	// I'm not sure if height and width need to be switched around here. 
-	private Tile[][] tiles = new Tile[GamePanel.NUM_TILES_HEIGHT][GamePanel.NUM_TILES_WIDTH];
-	private int numSquares = GamePanel.NUM_TILES_HEIGHT * GamePanel.NUM_TILES_WIDTH;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.ImageObserver;
+
+public class Board
+{
+	private int x, y;
+	private int width, height;
+	private int currentPhase;
+	private Tile[][] tiles;
 	
-	public Tile getTile(int x, int y)
+	public Board(int x, int y, int width, int height)
 	{
-		return this.tiles[x][y];
-	}
-	public Piece getPieceAtLocation(int x, int y)
-	{
-		return this.tiles[x][y].getPieceOnTile();
-	}
-	public int getNumSquares()
-	{
-		return this.numSquares;
-	}
-	
-	public void addTile(Tile newTile, int x, int y)
-	{
-		this.tiles[x][y] = newTile;
-		newTile.setX(x);
-		newTile.setY(y);
-	}
+		this.width = width;
+		this.height = height;
+		this.x=x;
+		this.y=y;
+		currentPhase = 1;
+		tiles = new Tile[8][8];
+		double tileHeight = height / (tiles[0].length * 1.0);
+		double tileWidth = width / (tiles.length * 1.0);
 		
+		
+		for(int i = 0; i < tiles.length; i++)
+		{
+			for(int j = 0; j < tiles[i].length; j++)
+			{
+				tiles[i][j] = (new Tile((int)(i * tileWidth) + x , (int)(j * tileHeight) + y , (int)tileWidth, (int)tileHeight));
+				if(i==3&&j==3)
+					tiles[i][j].addPawn();
+			}
+		}
+	}
+	
+	public void draw(Graphics g, ImageObserver io)
+	{
+		for(int i = 0; i < tiles.length; i++)
+		{
+			for(int j = 0; j < tiles[i].length; j++)
+			{
+				Tile t = tiles[i][j];
+				t.draw(g,io);
+				g.setColor(Color.WHITE);
+				g.drawRect(t.getX(), t.getY(), t.getWidth(), t.getHeight());
+			}
+		}
+	}
+	
+	public void update(int x, int y, int width, int height)
+	{
+		this.x=x;
+		this.y=y;
+		this.width = width;
+		this.height = height;
+		double tileHeight = height / (tiles[0].length * 1.0);
+		double tileWidth = width / (tiles.length * 1.0);	
+		for(int i = 0; i < tiles.length; i++)
+		{
+			for(int j = 0; j < tiles[i].length; j++)
+			{
+				Tile t = tiles[i][j]; 
+				t.setX((int)(i*tileWidth)+x);
+				t.setY((int)(j*tileHeight)+y);
+				t.setWidth((int)(tileWidth));
+				t.setHeight((int)(tileHeight));
+				if(i==3&&j==3)
+					tiles[i][j].addPawn();
+			}
+		}
+	}
+	
+	public void clicked(int x, int y, boolean leftClick)
+	{
+		int i = x/(width/8);
+		int j = y/(height/8);
+		
+		if(currentPhase == 1)
+		{
+			if(leftClick)
+				tiles[i][j].nextType();
+			else
+			{
+				if(tiles[i][j].getPieceOnTile()==null)
+					tiles[i][j].addPawn();
+				else
+					tiles[i][j].removePiece();
+			}
+		}
+		
+	}
+
+	public int getX()
+	{
+		return x;
+	}
+
+	public void setX(int x)
+	{
+		this.x = x;
+	}
+
+	public int getY()
+	{
+		return y;
+	}
+
+	public void setY(int y)
+	{
+		this.y = y;
+	}
+
+	public int getWidth()
+	{
+		return width;
+	}
+
+	public void setWidth(int width)
+	{
+		this.width = width;
+	}
+
+	public int getHeight()
+	{
+		return height;
+	}
+
+	public void setHeight(int height)
+	{
+		this.height = height;
+	}
+	
+	public int getPhase()
+	{
+		return currentPhase;
+	}
+	
+	public void setPhase(int phase)
+	{
+		currentPhase=phase;
+	}
+
 }
