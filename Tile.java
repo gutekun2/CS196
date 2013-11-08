@@ -109,7 +109,7 @@ public class Tile
 	public void draw(Graphics g, ImageObserver io)
 	{
 		if(type == 0)
-			g.setColor(Color.BLACK);
+			g.setColor(Color.DARK_GRAY);
 		else if(type == 1)
 			g.setColor(new Color(0x996633));
 		else if(type == 2)
@@ -126,11 +126,11 @@ public class Tile
 			g.setColor(Color.BLACK);
 		
 		if(hidden)
-			g.setColor(Color.DARK_GRAY);
+			g.setColor(Color.BLACK);
 		g.fillRect(this.x, this.y, width, height);
 		
 		
-		if(pieceOnTile!=null)
+		if(pieceOnTile!=null && !hidden)
 			pieceOnTile.draw(g, io);
 	}
 	

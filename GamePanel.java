@@ -11,12 +11,12 @@ public class GamePanel extends JPanel implements MouseListener
 	private Board gameBoard;
 	private int currentPhase;
 	
-	public GamePanel(int height, int width)
+	public GamePanel()
 	{
 		super();
 		addMouseListener(this);
 		gameBoard = new Board(getWidth()/16, getHeight()/16,getWidth()/8*7,getHeight()/8*7);
-		currentPhase = 1;
+		currentPhase = 0;
 	}
 	
 	public void paintComponent(Graphics g)
@@ -34,29 +34,12 @@ public class GamePanel extends JPanel implements MouseListener
 	public void setPhase(int phase)
 	{
 		currentPhase=phase;
-		
+		gameBoard.setPhase(phase);
 	}
 	
-	public void act()
+	public int getPhase()
 	{
-		while(true)
-		{
-			long startTime=System.currentTimeMillis();
-			
-			repaint();
-			
-			long endTime=System.currentTimeMillis();
-		  	try
-		  	{
-		  		long t=20-(endTime-startTime);
-		  		
-		  		if(t>0)
-		  			Thread.sleep(t);
-		  		else
-		  			Thread.yield();
-		  	} 
-		  	catch (InterruptedException e) {}
-		}
+		return currentPhase;
 	}
 
 	

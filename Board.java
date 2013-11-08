@@ -15,7 +15,7 @@ public class Board
 		this.height = height;
 		this.x=x;
 		this.y=y;
-		currentPhase = 1;
+		currentPhase = 0;
 		tiles = new Tile[8][8];
 		double tileHeight = height / (tiles[0].length * 1.0);
 		double tileWidth = width / (tiles.length * 1.0);
@@ -26,8 +26,6 @@ public class Board
 			for(int j = 0; j < tiles[i].length; j++)
 			{
 				tiles[i][j] = (new Tile((int)(i * tileWidth) + x , (int)(j * tileHeight) + y , (int)tileWidth, (int)tileHeight));
-				if(i==3&&j==3)
-					tiles[i][j].addPawn();
 			}
 		}
 	}
@@ -63,8 +61,6 @@ public class Board
 				t.setY((int)(j*tileHeight)+y);
 				t.setWidth((int)(tileWidth));
 				t.setHeight((int)(tileHeight));
-				if(i==3&&j==3)
-					tiles[i][j].addPawn();
 			}
 		}
 	}
@@ -74,10 +70,13 @@ public class Board
 		int i = x/(width/8);
 		int j = y/(height/8);
 		
-		if(currentPhase == 1)
+		if(currentPhase == 1 || currentPhase == 2)
 		{
+			if(!tiles[i][j].getHidden())
 			if(leftClick)
+			{
 				tiles[i][j].nextType();
+			}
 			else
 			{
 				if(tiles[i][j].getPieceOnTile()==null)
@@ -137,6 +136,35 @@ public class Board
 	public void setPhase(int phase)
 	{
 		currentPhase=phase;
+		if(phase==1)
+		{
+			for(int i = 0; i<tiles.length; i++)
+			{
+				for(int j = 0; j<tiles[i].length/2; j++)
+					tiles[i][j].setHidden(true);
+			}
+		}
+		if(phase==2)
+		{
+			for(int i = 0; i<tiles.length; i++)
+			{
+				for(int j = 0; j<tiles[i].length; j++)
+				{
+					if(j<tiles[i].length/2)
+						tiles[i][j].setHidden(false);
+					else
+						tiles[i][j].setHidden(true);
+				}
+			}
+		}
+		if(phase==3)
+		{
+			for(int i = 0; i<tiles.length; i++)
+			{
+				for(int j = 0; j<tiles[i].length; j++)
+					tiles[i][j].setHidden(false);
+			}
+		}
 	}
 
 }
