@@ -1,6 +1,9 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.ImageObserver;
+
+import javax.swing.ImageIcon;
 
 public class Tile 
 {
@@ -9,6 +12,7 @@ public class Tile
 	private boolean selected;
 	private boolean hidden;
 	private int type; //1-Mountain, 2-Water, 3-Forest, 4-Grass, 5-Fortress, 6-Broken Fortress
+	private Image image;
 	private Piece pieceOnTile;
 	
 	public Tile (int start_x, int start_y, int startWidth, int startHeight)
@@ -83,6 +87,11 @@ public class Tile
 		this.hidden = hidden;
 	}
 	
+	public void setImageString(String filename)
+	{
+		image = (new ImageIcon(filename)).getImage();
+	}
+	
 	public void nextType()
 	{
 		type++;
@@ -107,28 +116,43 @@ public class Tile
 	
 	// Draw method
 	public void draw(Graphics g, ImageObserver io)
-	{
-		if(type == 0)
+	{		
+		switch(type) {
+		case 0:
 			g.setColor(Color.DARK_GRAY);
-		else if(type == 1)
-			g.setColor(new Color(0x996633));
-		else if(type == 2)
-			g.setColor(Color.BLUE);
-		else if(type == 3)
-			g.setColor(new Color(0x336600));
-		else if(type == 4)
-			g.setColor(Color.GREEN);
-		else if(type == 5)
-			g.setColor(Color.LIGHT_GRAY);
-		else if(type == 6)
-			g.setColor(Color.GRAY);
-		else	
+			g.fillRect(this.x, this.y, width, height);
+			break;
+		case 1: 
+			setImageString("assets/Mountain.png");
+			g.drawImage(image, x, y, width, height, io);
+			break;
+		case 2:
+			setImageString("assets/Water.png");
+			g.drawImage(image, x, y, width, height, io);
+			break;
+		case 3:
+			setImageString("assets/Forest.png");
+			g.drawImage(image, x, y, width, height, io);
+			break;
+		case 4:
+			setImageString("assets/Grass.png");
+			g.drawImage(image, x, y, width, height, io);
+			break;
+		case 5:
+			setImageString("assets/Fortress.png");
+			g.drawImage(image, x, y, width, height, io);
+			break;
+		default:
 			g.setColor(Color.BLACK);
+			g.fillRect(this.x, this.y, width, height);
+			break;
+		}
 		
 		if(hidden)
-			g.setColor(Color.BLACK);
-		g.fillRect(this.x, this.y, width, height);
-		
+		{
+			g.setColor(Color.BLACK);	
+			g.fillRect(this.x, this.y, width, height);
+		}
 		
 		if(pieceOnTile!=null && !hidden)
 			pieceOnTile.draw(g, io);
