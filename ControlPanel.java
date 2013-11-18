@@ -15,6 +15,7 @@ public class ControlPanel extends JPanel
 		nextPhase.setActionCommand("nextPhase");
 		nextPhase.addActionListener(new ButtonListener());
 		
+		
 		add(nextPhase);
 		gamePanel = p;
 	}
@@ -25,7 +26,8 @@ public class ControlPanel extends JPanel
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			if(arg0.getActionCommand().equals(nextPhase.getActionCommand()))
+			String command = arg0.getActionCommand();
+			if(command.equals(nextPhase.getActionCommand()))
 				gamePanel.setPhase(gamePanel.getPhase()+1);
 		}
 		

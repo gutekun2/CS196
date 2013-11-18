@@ -39,6 +39,7 @@ public class Board
 				Tile t = tiles[i][j];
 				t.draw(g,io);
 				g.setColor(Color.WHITE);
+				
 				g.drawRect(t.getX(), t.getY(), t.getWidth(), t.getHeight());
 			}
 		}
@@ -157,7 +158,7 @@ public class Board
 				}
 			}
 		}
-		if(phase==3)
+		if(phase>=3)
 		{
 			for(int i = 0; i<tiles.length; i++)
 			{
@@ -165,6 +166,58 @@ public class Board
 					tiles[i][j].setHidden(false);
 			}
 		}
+	}
+
+	public Tile[][] getTopTiles()
+	{
+		Tile[][] result = new Tile[tiles.length][tiles[0].length/2];
+		for(int i = 0; i<tiles.length; i++)
+		{
+			for(int j = 0; j<tiles[i].length/2; j++)
+			{
+				result[i][j] = tiles[i][j];
+			}
+		}
+		return result;
+	}
+
+	public Tile[][] getBottomTiles()
+	{
+		Tile[][] result = new Tile[tiles.length][tiles[0].length/2];
+		for(int i = 0; i<tiles.length; i++)
+		{
+			for(int j = 0; j<tiles[i].length/2; j++)
+			{
+				result[i][j] = tiles[i][j+tiles[i].length/2];
+			}
+		}
+		return result;
+	}
+
+	public int[] getTopTileCount()
+	{
+		int[] result = new int[7];
+		for(int i = 0; i<tiles.length; i++)
+		{
+			for(int j = 0; j<tiles[i].length/2; j++)
+			{
+				result[tiles[i][j].getType()]++;
+			}
+		}
+		return result;
+	}
+
+	public int[] getBottomTileCount()
+	{
+		int[] result = new int[7];
+		for(int i = 0; i<tiles.length; i++)
+		{
+			for(int j = tiles[i].length/2 + 1; j<tiles[i].length; j++)
+			{
+				result[tiles[i][j].getType()]++;
+			}
+		}
+		return result;
 	}
 
 }

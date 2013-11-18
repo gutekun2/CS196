@@ -11,7 +11,7 @@ public class Tile
 	private int width, height;
 	private boolean selected;
 	private boolean hidden;
-	private int type; //1-Mountain, 2-Water, 3-Forest, 4-Grass, 5-Fortress, 6-Broken Fortress
+	private int type; //0-Unselected, 1-Mountain, 2-Water, 3-Forest, 4-Grass, 5-Fortress, 6-Broken Fortress
 	private Image image;
 	private Piece pieceOnTile;
 	
@@ -46,6 +46,12 @@ public class Tile
 	{
 		return this.selected;
 	}
+	
+	public int getType()
+	{
+		return type;
+	}
+	
 	public Piece getPieceOnTile()
 	{
 		return this.pieceOnTile;
