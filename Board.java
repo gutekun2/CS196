@@ -38,8 +38,10 @@ public class Board
 			{
 				Tile t = tiles[i][j];
 				t.draw(g,io);
-				g.setColor(Color.WHITE);
-				
+				if(t.getSelected())
+					g.setColor(Color.MAGENTA);
+				else
+					g.setColor(Color.WHITE);
 				g.drawRect(t.getX(), t.getY(), t.getWidth(), t.getHeight());
 			}
 		}
@@ -70,20 +72,31 @@ public class Board
 	{
 		int i = x/(width/8);
 		int j = y/(height/8);
+		Tile t = tiles[i][j];
 		
 		if(currentPhase == 1 || currentPhase == 2)
 		{
-			if(!tiles[i][j].getHidden())
+			if(!t.getHidden())
 			if(leftClick)
 			{
-				tiles[i][j].nextType();
+				t.nextType();
 			}
 			else
 			{
-				if(tiles[i][j].getPieceOnTile()==null)
-					tiles[i][j].addPawn();
+				if(t.getPieceOnTile()==null)
+					t.addPawn();
 				else
-					tiles[i][j].removePiece();
+					t.removePiece();
+			}
+		}
+		if(currentPhase >= 3)
+		{
+			if(t.getSelected())
+				t.setSelected(false);
+			else
+			{
+				deselectAll();
+				t.setSelected(true);
 			}
 		}
 		
@@ -212,12 +225,19 @@ public class Board
 		int[] result = new int[7];
 		for(int i = 0; i<tiles.length; i++)
 		{
-			for(int j = tiles[i].length/2 + 1; j<tiles[i].length; j++)
+			for(int j = tiles[i].length/2; j<tiles[i].length; j++)
 			{
 				result[tiles[i][j].getType()]++;
 			}
 		}
 		return result;
+	}
+
+	public void deselectAll()
+	{
+		for(int i = 0; i<tiles.length; i++)
+			for(int j = 0; j<tiles[i].length; j++)
+				tiles[i][j].setSelected(false);
 	}
 
 }
