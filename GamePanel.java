@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements MouseListener
 	
 	public void setPhase(int phase)
 	{
-		if(canContinue())
+		//if(canContinue())
 		{
 			currentPhase=phase;
 			gameBoard.setPhase(phase);

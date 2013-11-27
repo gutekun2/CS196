@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 public class Tile 
 {
 	private int x, y;
+	private int gridX, gridY;
 	private int width, height;
 	private boolean selected;
 	private boolean hidden;
@@ -15,12 +16,14 @@ public class Tile
 	private Image image;
 	private Piece pieceOnTile;
 	
-	public Tile (int start_x, int start_y, int startWidth, int startHeight)
+	public Tile (int start_x, int start_y, int startWidth, int startHeight, int gridX, int gridY)
 	{
 		x = start_x;
 		y = start_y;
 		width = startWidth;
 		height = startHeight;
+		this.gridX = gridX;
+		this.gridY = gridY;
 		type = 0;
 		selected = false;
 	}
@@ -30,18 +33,32 @@ public class Tile
 	{
 		return this.x;
 	}
+	
 	public int getY()
 	{
 		return this.y;
 	}
+	
 	public int getWidth()
 	{
 		return this.width;
 	}
+	
 	public int getHeight()
 	{
 		return this.height;
 	}
+	
+	public int getGridX()
+	{
+		return gridX;
+	}
+	
+	public int getGridY()
+	{
+		return gridY;
+	}
+	
 	public boolean getSelected()
 	{
 		return this.selected;
@@ -91,6 +108,11 @@ public class Tile
 	public void setHidden(boolean hidden)
 	{
 		this.hidden = hidden;
+	}
+	
+	public void setPieceOnTile(Piece p)
+	{
+		this.pieceOnTile = p;
 	}
 	
 	public void setImageString(String filename)

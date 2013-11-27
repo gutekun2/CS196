@@ -1,12 +1,15 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.ImageObserver;
+import java.util.ArrayList;
 
 public class Board
 {
 	private int x, y;
 	private int width, height;
 	private int currentPhase;
+	private ArrayList<Tile> validMoveLocations;
+	private Tile currentlySelected;
 	private Tile[][] tiles;
 	
 	public Board(int x, int y, int width, int height)
@@ -16,6 +19,8 @@ public class Board
 		this.x=x;
 		this.y=y;
 		currentPhase = 0;
+		validMoveLocations = new ArrayList<Tile>();
+		currentlySelected = null;
 		tiles = new Tile[8][8];
 		double tileHeight = height / (tiles[0].length * 1.0);
 		double tileWidth = width / (tiles.length * 1.0);
@@ -25,7 +30,7 @@ public class Board
 		{
 			for(int j = 0; j < tiles[i].length; j++)
 			{
-				tiles[i][j] = (new Tile((int)(i * tileWidth) + x , (int)(j * tileHeight) + y , (int)tileWidth, (int)tileHeight));
+				tiles[i][j] = new Tile((int)(i * tileWidth) + x , (int)(j * tileHeight) + y , (int)tileWidth, (int)tileHeight, i, j);
 			}
 		}
 	}
@@ -38,10 +43,14 @@ public class Board
 			{
 				Tile t = tiles[i][j];
 				t.draw(g,io);
+				
 				if(t.getSelected())
 					g.setColor(Color.MAGENTA);
+				else if(validMoveLocations.contains(t))
+					g.setColor(Color.CYAN);
 				else
 					g.setColor(Color.WHITE);
+				
 				g.drawRect(t.getX(), t.getY(), t.getWidth(), t.getHeight());
 			}
 		}
@@ -89,19 +98,89 @@ public class Board
 					t.removePiece();
 			}
 		}
-		if(currentPhase >= 3)
+		if(currentPhase == 3)
 		{
 			if(t.getSelected())
+			{
 				t.setSelected(false);
+				validMoveLocations = new ArrayList<Tile>();
+				currentlySelected = null;
+			}
 			else
 			{
 				deselectAll();
 				t.setSelected(true);
+				if(t.getPieceOnTile() != null){
+					validMoveLocations = getValidMoveLocations(t.getGridX(), t.getGridY(),t.getPieceOnTile().getMoveRange());
+					currentlySelected = t;
+					
+				}
+			}
+		}
+		if(currentPhase == 4)
+		{
+			if(validMoveLocations.contains(t))
+			{
+				t.addPawn();
+				currentlySelected.removePiece();
+				currentlySelected.setSelected(false);
+				currentlySelected = null;
+				validMoveLocations = new ArrayList<Tile>();
+				currentPhase++;
 			}
 		}
 		
 	}
+	
+	public ArrayList<Tile> getValidMoveLocations(int x, int y, int range)
+	{
+		ArrayList<Tile> validLocations = new ArrayList<Tile>();
+		ArrayList<Tile> temp = new ArrayList<Tile>();
+		
+		
+		if(range !=0)
+			validLocations = getValidAdjacentTiles(x,y,true);
+		range--;
+		
+		
+		while(range > 0)
+		{
+			int size = validLocations.size();
+			for(int i = 0; i<size; i++)
+			{
+				Tile t = validLocations.get(i);
+				temp = getValidAdjacentTiles(t.getGridX(), t.getGridY(), false);
+				
+				
+				for(int j = 0; j<temp.size(); j++)
+				{
+					if(!validLocations.contains(temp.get(j)))
+						validLocations.add(temp.get(j));
+				}
+			}
+			range--;
+		}
+		return validLocations;
+	}
 
+	private ArrayList<Tile> getValidAdjacentTiles(int x, int y, boolean ignoreWater)
+	{
+		ArrayList<Tile> adjacent = new ArrayList<Tile>();
+		
+		if(tiles[x][y].getType() != 2 || ignoreWater)
+		{
+			if(x+1 < tiles.length && tiles[x+1][y].getType() != 1)
+				adjacent.add(tiles[x+1][y]);
+			if(x-1 >= 0 && tiles[x-1][y].getType() != 1)
+				adjacent.add(tiles[x-1][y]);
+			if(y+1 < tiles[x].length && tiles[x][y+1].getType() != 1)
+				adjacent.add(tiles[x][y+1]);
+			if(y-1 >= 0 && tiles[x][y-1].getType() != 1)
+				adjacent.add(tiles[x][y-1]);
+		}
+		return adjacent;
+	}
+	
 	public int getX()
 	{
 		return x;
@@ -238,6 +317,7 @@ public class Board
 		for(int i = 0; i<tiles.length; i++)
 			for(int j = 0; j<tiles[i].length; j++)
 				tiles[i][j].setSelected(false);
+		validMoveLocations = new ArrayList<Tile>();
 	}
 
 }

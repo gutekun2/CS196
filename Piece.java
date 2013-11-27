@@ -5,7 +5,8 @@ import javax.swing.ImageIcon;
 
 public abstract class Piece {
 	private Image image;
-	int x,y,width,height;
+	
+	int x,y,width,height,moveRange,attackRange;
 	
 	public Piece()
 	{
@@ -16,13 +17,15 @@ public abstract class Piece {
 		height=0;
 	}
 	
-	public Piece(String imageName, int x, int y, int width, int height)
+	public Piece(String imageName, int x, int y, int width, int height, int moveRange, int attackRange)
 	{
 		setImageString(imageName);
 		this.x=x;
 		this.y=y;
 		this.width=width;
 		this.height=height;
+		this.moveRange=moveRange;
+		this.attackRange=attackRange;
 	}
 	
 	public void setImageString(String filename)
@@ -33,5 +36,15 @@ public abstract class Piece {
 	public void draw(Graphics g, ImageObserver io)
 	{
 		g.drawImage(image, x, y, width, height, io);
+	}
+	
+	public int getMoveRange()
+	{
+		return moveRange;
+	}
+	
+	public int getAttackRange()
+	{
+		return attackRange;
 	}
 }

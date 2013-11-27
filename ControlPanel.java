@@ -3,11 +3,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 
 
 public class ControlPanel extends JPanel
 {
 	private JButton nextPhase;
+	private JTextPane currentPhase;
 	private GamePanel gamePanel;
 	public ControlPanel(GamePanel p)
 	{
@@ -15,8 +17,10 @@ public class ControlPanel extends JPanel
 		nextPhase.setActionCommand("nextPhase");
 		nextPhase.addActionListener(new ButtonListener());
 		
+		currentPhase = new JTextPane();
 		
 		add(nextPhase);
+		add(currentPhase);
 		gamePanel = p;
 	}
 	
@@ -28,7 +32,10 @@ public class ControlPanel extends JPanel
 		{
 			String command = arg0.getActionCommand();
 			if(command.equals(nextPhase.getActionCommand()))
+			{
 				gamePanel.setPhase(gamePanel.getPhase()+1);
+				currentPhase.setText(gamePanel.getPhase() + "");
+			}
 		}
 		
 	}
