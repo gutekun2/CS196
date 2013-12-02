@@ -8,7 +8,7 @@ public class Board
 	private int x, y;
 	private int width, height;
 	private int currentPhase;
-	private ArrayList<Tile> validMoveLocations;
+	private ArrayList<Tile> validMoveLocations, validAttackLocations;
 	private Tile currentlySelected;
 	private Tile[][] tiles;
 	
@@ -20,6 +20,7 @@ public class Board
 		this.y=y;
 		currentPhase = 0;
 		validMoveLocations = new ArrayList<Tile>();
+		validAttackLocations = new ArrayList<Tile>();
 		currentlySelected = null;
 		tiles = new Tile[8][8];
 		double tileHeight = height / (tiles[0].length * 1.0);
@@ -86,19 +87,21 @@ public class Board
 		if(currentPhase == 1 || currentPhase == 2)
 		{
 			if(!t.getHidden())
-			if(leftClick)
 			{
-				t.nextType();
-			}
-			else
-			{
-				if(t.getPieceOnTile()==null)
-					t.addPawn();
+				if(leftClick)
+				{
+					t.nextType();
+				}
 				else
-					t.removePiece();
+				{
+					if(currentPhase == 1)
+						t.nextPiece(true);
+					else
+						t.nextPiece(false);
+				}
 			}
 		}
-		if(currentPhase == 3)
+		if(currentPhase == 3) //White select phase
 		{
 			if(t.getSelected())
 			{
@@ -110,21 +113,22 @@ public class Board
 			{
 				deselectAll();
 				t.setSelected(true);
-				if(t.getPieceOnTile() != null){
+				if(t.getPieceOnTile() != null && t.getPieceOnTile().getWhite()){
 					validMoveLocations = getValidMoveLocations(t.getGridX(), t.getGridY(),t.getPieceOnTile().getMoveRange());
 					currentlySelected = t;
 					
 				}
 			}
 		}
-		if(currentPhase == 4)
+		if(currentPhase == 4) //White move phase
 		{
 			if(validMoveLocations.contains(t))
 			{
-				t.addPawn();
+				t.addPiece(currentlySelected.getPieceOnTile().getValue(), true);
 				currentlySelected.removePiece();
 				currentlySelected.setSelected(false);
-				currentlySelected = null;
+				t.setSelected(true);
+				currentlySelected = t;
 				validMoveLocations = new ArrayList<Tile>();
 				currentPhase++;
 			}
@@ -139,7 +143,7 @@ public class Board
 		
 		
 		if(range !=0)
-			validLocations = getValidAdjacentTiles(x,y,true);
+			validLocations = getValidAdjacentMoveTiles(x,y,true);
 		range--;
 		
 		
@@ -149,7 +153,7 @@ public class Board
 			for(int i = 0; i<size; i++)
 			{
 				Tile t = validLocations.get(i);
-				temp = getValidAdjacentTiles(t.getGridX(), t.getGridY(), false);
+				temp = getValidAdjacentMoveTiles(t.getGridX(), t.getGridY(), false);
 				
 				
 				for(int j = 0; j<temp.size(); j++)
@@ -163,7 +167,7 @@ public class Board
 		return validLocations;
 	}
 
-	private ArrayList<Tile> getValidAdjacentTiles(int x, int y, boolean ignoreWater)
+	private ArrayList<Tile> getValidAdjacentMoveTiles(int x, int y, boolean ignoreWater)
 	{
 		ArrayList<Tile> adjacent = new ArrayList<Tile>();
 		

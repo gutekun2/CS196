@@ -1,15 +1,13 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.*;
 
 
 public class ControlPanel extends JPanel
 {
 	private JButton nextPhase;
-	private JTextPane currentPhase;
+	private JTextArea currentPhase;
 	private GamePanel gamePanel;
 	public ControlPanel(GamePanel p)
 	{
@@ -17,7 +15,7 @@ public class ControlPanel extends JPanel
 		nextPhase.setActionCommand("nextPhase");
 		nextPhase.addActionListener(new ButtonListener());
 		
-		currentPhase = new JTextPane();
+		currentPhase = new JTextArea();
 		
 		add(nextPhase);
 		add(currentPhase);

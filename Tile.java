@@ -5,6 +5,8 @@ import java.awt.image.ImageObserver;
 
 import javax.swing.ImageIcon;
 
+import Pieces.*;
+
 public class Tile 
 {
 	private int x, y;
@@ -110,7 +112,7 @@ public class Tile
 		this.hidden = hidden;
 	}
 	
-	public void setPieceOnTile(Piece p)
+	public void setPieceOnTile(Piece p)//Don't use this method.
 	{
 		this.pieceOnTile = p;
 	}
@@ -132,9 +134,51 @@ public class Tile
 		pieceOnTile = null;
 	}
 	
-	public void addPawn()
+	public void addPiece(int choice, boolean white)
 	{
-		pieceOnTile = new Pawn(x+width/4, y+height/4, width/2, height/2);
+		if(choice==1)
+			pieceOnTile = new Rabble(x+width/4, y+height/4, width/2, height/2, white);
+		if(choice==2)
+			pieceOnTile = new Spearman(x+width/4, y+height/4, width/2, height/2, white);
+		if(choice==3)
+			pieceOnTile = new Crossbowman(x+width/4, y+height/4, width/2, height/2, white);
+		if(choice==4)
+			pieceOnTile = new Horse(x+width/4, y+height/4, width/2, height/2, white);
+		if(choice==5)
+			pieceOnTile = new Warbear(x+width/4, y+height/4, width/2, height/2, white);
+		if(choice==6)
+			pieceOnTile = new Catapult(x+width/4, y+height/4, width/2, height/2, white);
+		if(choice==7)
+			pieceOnTile = new Trebuchet(x+width/4, y+height/4, width/2, height/2, white);
+		if(choice==8)
+			pieceOnTile = new Dragon(x+width/4, y+height/4, width/2, height/2, white);
+	}
+	
+	public void nextPiece(boolean white)
+	{	
+		int val = 0;
+		if(pieceOnTile != null)
+			val = pieceOnTile.getValue();
+		if(val==0)
+			pieceOnTile = new Rabble(x+width/4, y+height/4, width/2, height/2, white);
+		else  if(val==1)
+			pieceOnTile = new Spearman(x+width/4, y+height/4, width/2, height/2, white);
+		else if(val==2)
+			pieceOnTile = new Crossbowman(x+width/4, y+height/4, width/2, height/2, white);
+		else if(val==3)
+			pieceOnTile = new Horse(x+width/4, y+height/4, width/2, height/2, white);
+		else if(val==4)
+			pieceOnTile = new Warbear(x+width/4, y+height/4, width/2, height/2, white);
+		else if(val==5)
+			pieceOnTile = new Catapult(x+width/4, y+height/4, width/2, height/2, white);
+		else if(val==6)
+			pieceOnTile = new Trebuchet(x+width/4, y+height/4, width/2, height/2, white);
+		else if(val==7)
+			pieceOnTile = new Dragon(x+width/4, y+height/4, width/2, height/2, white);
+		else if(val==8)
+			pieceOnTile = new King(x+width/4, y+height/4, width/2, height/2, white);
+		else
+			pieceOnTile = null;
 	}
 	
 	public boolean isIn(int xPoint, int yPoint)
@@ -168,6 +212,10 @@ public class Tile
 			break;
 		case 5:
 			setImageString("assets/Fortress.png");
+			g.drawImage(image, x, y, width, height, io);
+			break;
+		case 6:
+			setImageString("assets/Broken Fortress.png");
 			g.drawImage(image, x, y, width, height, io);
 			break;
 		default:
