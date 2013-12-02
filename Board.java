@@ -3,6 +3,8 @@ import java.awt.Graphics;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 
+import Pieces.Piece;
+
 public class Board
 {
 	private int x, y;
@@ -114,7 +116,7 @@ public class Board
 				deselectAll();
 				t.setSelected(true);
 				if(t.getPieceOnTile() != null && t.getPieceOnTile().getWhite()){
-					validMoveLocations = getValidMoveLocations(t.getGridX(), t.getGridY(),t.getPieceOnTile().getMoveRange());
+					validMoveLocations = getValidMoveLocations(t.getGridX(), t.getGridY(),t.getPieceOnTile());
 					currentlySelected = t;
 					
 				}
@@ -136,14 +138,15 @@ public class Board
 		
 	}
 	
-	public ArrayList<Tile> getValidMoveLocations(int x, int y, int range)
+	public ArrayList<Tile> getValidMoveLocations(int x, int y, Piece p)
 	{
+		int range = p.getMoveRange();
 		ArrayList<Tile> validLocations = new ArrayList<Tile>();
 		ArrayList<Tile> temp = new ArrayList<Tile>();
 		
 		
 		if(range !=0)
-			validLocations = getValidAdjacentMoveTiles(x,y,true);
+			validLocations = getValidAdjacentMoveTiles(x,y,true,p);
 		range--;
 		
 		
@@ -153,7 +156,7 @@ public class Board
 			for(int i = 0; i<size; i++)
 			{
 				Tile t = validLocations.get(i);
-				temp = getValidAdjacentMoveTiles(t.getGridX(), t.getGridY(), false);
+				temp = getValidAdjacentMoveTiles(t.getGridX(), t.getGridY(), false, p);
 				
 				
 				for(int j = 0; j<temp.size(); j++)
@@ -167,22 +170,51 @@ public class Board
 		return validLocations;
 	}
 
-	private ArrayList<Tile> getValidAdjacentMoveTiles(int x, int y, boolean ignoreWater)
+	private ArrayList<Tile> getValidAdjacentMoveTiles(int x, int y, boolean ignoreWater, Piece p)
 	{
 		ArrayList<Tile> adjacent = new ArrayList<Tile>();
 		
 		if(tiles[x][y].getType() != 2 || ignoreWater)
 		{
-			if(x+1 < tiles.length && tiles[x+1][y].getType() != 1)
+			if(isValidMoveLocation(x+1,y,p))
 				adjacent.add(tiles[x+1][y]);
-			if(x-1 >= 0 && tiles[x-1][y].getType() != 1)
+			if(isValidMoveLocation(x-1,y,p))
 				adjacent.add(tiles[x-1][y]);
-			if(y+1 < tiles[x].length && tiles[x][y+1].getType() != 1)
+			if(isValidMoveLocation(x,y+1,p))
 				adjacent.add(tiles[x][y+1]);
-			if(y-1 >= 0 && tiles[x][y-1].getType() != 1)
+			if(isValidMoveLocation(x,y-1,p))
 				adjacent.add(tiles[x][y-1]);
 		}
 		return adjacent;
+	}
+	
+	private boolean isValidMoveLocation(int x, int y, Piece p)
+	{
+		if(x >= tiles.length || x < 0)
+			return false;
+		if(y >= tiles[x].length || y < 0)
+			return false;
+		if(tiles[x][y].getType() == 1)
+			return false;
+		
+		Piece target = tiles[x][y].getPieceOnTile();
+		
+		if(target != null)
+		{
+			if(target.getWhite() == p.getWhite())
+				return false;
+
+			int val = p.getValue();
+			int targetVal = target.getValue();
+			
+			if(targetVal == 9)
+				return true;
+			
+			if(val + 1 < targetVal)
+				return false;
+		}
+		
+		return true;
 	}
 	
 	public int getX()
