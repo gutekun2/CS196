@@ -44,6 +44,10 @@ public class Board
 	
 	public void draw(Graphics g, ImageObserver io)
 	{
+		Graphics2D g2 = (Graphics2D)g;
+		Stroke oldStroke = g2.getStroke();
+		g2.setStroke(new BasicStroke(2));
+		
 		for(int i = 0; i < tiles.length; i++)
 		{
 			for(int j = 0; j < tiles[i].length; j++)
@@ -51,22 +55,27 @@ public class Board
 				Tile t = tiles[i][j];
 				t.draw(g,io);
 				
-				Graphics2D g2 = (Graphics2D)g;
-				Stroke oldStroke = g2.getStroke();
-				g2.setStroke(new BasicStroke(2));
-				
-				if(t.getSelected())
-					g2.setColor(Color.MAGENTA);
-				else if(validLocations.contains(t))
-					g2.setColor(Color.CYAN);
-				else
-					g2.setColor(Color.WHITE);
-				
+				g2.setColor(Color.WHITE);
 				g2.drawRect(t.getX(), t.getY(), t.getWidth(), t.getHeight());
-				
-				g2.setStroke(oldStroke);
 			}
 		}
+		
+		if(currentlySelected != null)
+		{
+			g2.setColor(Color.CYAN);
+			Tile t = currentlySelected;
+			g2.drawRect(t.getX(), t.getY(), t.getWidth(), t.getHeight());
+		}
+		
+		for(int i = 0; i<validLocations.size(); i++)
+		{
+			g2.setColor(Color.MAGENTA);
+			Tile t = validLocations.get(i);
+			g2.drawRect(t.getX(), t.getY(), t.getWidth(), t.getHeight());
+		}
+		
+		g2.setStroke(oldStroke);
+
 	}
 	
 	public void update(int x, int y, int width, int height)
@@ -126,11 +135,10 @@ public class Board
 			{
 				deselectAll();
 				t.setSelected(true);
+				currentlySelected = t;
 				if(t.getPieceOnTile() != null && t.getPieceOnTile().getWhite())
 				{
 					validLocations = getValidMoveLocations(t.getGridX(), t.getGridY(),t.getPieceOnTile());
-					currentlySelected = t;
-					
 				}
 			}
 		}
@@ -145,6 +153,8 @@ public class Board
 				currentlySelected = t;
 				validLocations = getValidAttackLocations(currentlySelected.getGridX(), currentlySelected.getGridY(),currentlySelected.getPieceOnTile());
 				gamePanel.setPhase(currentPhase + 1);
+				if(getBlackPieceCount() == 0)
+					gamePanel.setPhase(10);
 			}
 		}
 		if(currentPhase == 5) //White attack phase
@@ -156,6 +166,8 @@ public class Board
 				t.removePiece();
 				validLocations = new ArrayList<Tile>();
 				gamePanel.setPhase(currentPhase + 1);
+				if(getBlackPieceCount() == 0)
+					gamePanel.setPhase(10);
 			}
 		}
 		
@@ -191,6 +203,8 @@ public class Board
 				currentlySelected = t;
 				validLocations = getValidAttackLocations(currentlySelected.getGridX(), currentlySelected.getGridY(),currentlySelected.getPieceOnTile());
 				gamePanel.setPhase(currentPhase + 1);
+				if(getWhitePieceCount() == 0)
+					gamePanel.setPhase(10);
 			}
 		}
 		if(currentPhase == 8) //Black attack phase
@@ -202,6 +216,22 @@ public class Board
 				t.removePiece();
 				validLocations = new ArrayList<Tile>();
 				gamePanel.setPhase(currentPhase + 1);
+				if(getWhitePieceCount() == 0)
+					gamePanel.setPhase(10);
+				
+			}
+		}
+		if(currentPhase == 10)
+		{
+			deselectAll();
+			for(int one = 0; one<tiles.length; one++)
+			{
+				for(int two = 0; two<tiles[i].length; two++)
+				{
+					tiles[one][two].setHidden(true);
+					tiles[one][two].removePiece();
+					currentlySelected = null;
+				}
 			}
 		}
 		
@@ -508,11 +538,47 @@ public class Board
 		return result;
 	}
 
+	public int getBlackPieceCount()
+	{
+		int pieces = 0;
+		for(int i = 0; i<tiles.length; i++)
+		{
+			for(int j = 0; j<tiles[i].length; j++)
+			{
+				if(tiles[i][j].getPieceOnTile() != null)
+				{
+					if(!tiles[i][j].getPieceOnTile().getWhite())
+						pieces++;
+				}
+			}
+		}
+		return pieces;
+	}
+	
+	public int getWhitePieceCount()
+	{
+		int pieces = 0;
+		for(int i = 0; i<tiles.length; i++)
+		{
+			for(int j = 0; j<tiles[i].length; j++)
+			{
+				if(tiles[i][j].getPieceOnTile() != null)
+				{
+					if(tiles[i][j].getPieceOnTile().getWhite())
+						pieces++;
+				}
+			}
+		}
+		return pieces;
+	}
+	
 	public void deselectAll()
 	{
 		for(int i = 0; i<tiles.length; i++)
 			for(int j = 0; j<tiles[i].length; j++)
+			{
 				tiles[i][j].setSelected(false);
+			}
 		validLocations= new ArrayList<Tile>();
 	}
 

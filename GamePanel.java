@@ -33,12 +33,12 @@ public class GamePanel extends JPanel implements MouseListener
 		
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("MONOSPACED",Font.BOLD,18));
-		g.drawString(currentPhase + "", 10, 18);
+		g.drawString(getPhaseString(), 10, 18);
 	}
 	
 	public void setPhase(int phase)
 	{
-		//if(canContinue())
+		if(canContinue())
 		{
 			if(phase == 9)
 				phase = 3;
@@ -67,6 +67,32 @@ public class GamePanel extends JPanel implements MouseListener
 				return false;
 		}
 		return true;
+	}
+	
+	public String getPhaseString()
+	{
+		if(currentPhase == 0)
+			return "Press \"next phase\" to begin";
+		else if (currentPhase == 1)
+			return "White setup phase";
+		else if (currentPhase == 2)
+			return "Black setup phase";
+		else if (currentPhase == 3)
+			return "White select phase";
+		else if (currentPhase == 4)
+			return "White move phase";
+		else if (currentPhase == 5)
+			return "White attack phase";
+		else if (currentPhase == 6)
+			return "Black select phase";
+		else if (currentPhase == 7)
+			return "Black move phase";
+		else if (currentPhase == 8)
+			return "Black attack phase";
+		else if (currentPhase == 10)
+			return "Game Over";
+		else
+			return "Whoops";
 	}
 	
 	public void mouseClicked(MouseEvent arg0)
