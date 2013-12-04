@@ -152,6 +152,8 @@ public class Tile
 			pieceOnTile = new Trebuchet(x+width/4, y+height/4, width/2, height/2, white);
 		if(choice==8)
 			pieceOnTile = new Dragon(x+width/4, y+height/4, width/2, height/2, white);
+		if(choice==9)
+			pieceOnTile = new King(x+width/4, y+height/4, width/2, height/2, white);
 	}
 	
 	public void nextPiece(boolean white)
