@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,7 +16,7 @@ public class GamePanel extends JPanel implements MouseListener
 	{
 		super();
 		addMouseListener(this);
-		gameBoard = new Board(getWidth()/16, getHeight()/16,getWidth()/8*7,getHeight()/8*7);
+		gameBoard = new Board(getWidth()/16, getHeight()/16,getWidth()/8*7,getHeight()/8*7,this);
 		currentPhase = 0;
 	}
 	
@@ -29,6 +30,10 @@ public class GamePanel extends JPanel implements MouseListener
 	{
 		gameBoard.update(getWidth()/16, getHeight()/16, getWidth()/8*7, getHeight()/8*7);
 		gameBoard.draw(g, this);
+		
+		g.setColor(Color.BLACK);
+		g.setFont(new Font("MONOSPACED",Font.BOLD,18));
+		g.drawString(currentPhase + "", 10, 18);
 	}
 	
 	public void setPhase(int phase)

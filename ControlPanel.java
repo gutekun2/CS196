@@ -7,7 +7,6 @@ import javax.swing.*;
 public class ControlPanel extends JPanel
 {
 	private JButton nextPhase;
-	private JTextArea currentPhase;
 	private GamePanel gamePanel;
 	public ControlPanel(GamePanel p)
 	{
@@ -15,10 +14,8 @@ public class ControlPanel extends JPanel
 		nextPhase.setActionCommand("nextPhase");
 		nextPhase.addActionListener(new ButtonListener());
 		
-		currentPhase = new JTextArea();
 		
 		add(nextPhase);
-		add(currentPhase);
 		gamePanel = p;
 	}
 	
@@ -32,7 +29,6 @@ public class ControlPanel extends JPanel
 			if(command.equals(nextPhase.getActionCommand()))
 			{
 				gamePanel.setPhase(gamePanel.getPhase()+1);
-				currentPhase.setText(gamePanel.getPhase() + "");
 			}
 		}
 		
