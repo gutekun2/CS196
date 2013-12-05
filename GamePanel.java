@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements MouseListener
 	
 	public void setPhase(int phase)
 	{
-		if(canContinue())
+		//if(canContinue())
 		{
 			if(phase == 9)
 				phase = 3;
@@ -59,12 +59,17 @@ public class GamePanel extends JPanel implements MouseListener
 			int[] bot = gameBoard.getBottomTileCount();
 			if(bot[1] != 6 || bot[2] != 5 || bot[3] != 6 || bot[4] != 14 || bot[5] != 1)
 				return false;
+			bot = gameBoard.getWhitePieceIndividualCount();
+			if(bot[1] != 1 || bot[2] != 1 || bot[3] != 1 || bot[4] != 1 || bot[5] != 1 || bot[6] != 1 || bot[7] != 1 || bot[8] != 1 || bot[9] != 1)
+				return true;
 		}
 		if(currentPhase==2)
 		{
 			int[] top = gameBoard.getTopTileCount();
 			if(top[1] != 6 || top[2] != 5 || top[3] != 6 || top[4] != 14 || top[5] != 1)
 				return false;
+			if(top[1] != 1 || top[2] != 1 || top[3] != 1 || top[4] != 1 || top[5] != 1 || top[6] != 1 || top[7] != 1 || top[8] != 1 || top[9] != 1)
+				return true;
 		}
 		return true;
 	}

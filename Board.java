@@ -201,8 +201,8 @@ public class Board
 				currentlySelected.setSelected(false);
 				t.setSelected(true);
 				currentlySelected = t;
-				validLocations = getValidAttackLocations(currentlySelected.getGridX(), currentlySelected.getGridY(),currentlySelected.getPieceOnTile());
 				gamePanel.setPhase(currentPhase + 1);
+				validLocations = getValidAttackLocations(currentlySelected.getGridX(), currentlySelected.getGridY(),currentlySelected.getPieceOnTile());
 				if(getWhitePieceCount() == 0)
 					gamePanel.setPhase(10);
 			}
@@ -566,6 +566,41 @@ public class Board
 				{
 					if(tiles[i][j].getPieceOnTile().getWhite())
 						pieces++;
+				}
+			}
+		}
+		return pieces;
+	}
+	
+	
+	public int[] getBlackPieceIndividualCount()
+	{
+		int[] pieces = new int[10];
+		for(int i = 0; i<tiles.length; i++)
+		{
+			for(int j = 0; j<tiles[i].length; j++)
+			{
+				if(tiles[i][j].getPieceOnTile() != null)
+				{
+					if(!tiles[i][j].getPieceOnTile().getWhite())
+						pieces[tiles[i][j].getPieceOnTile().getValue()]++;
+				}
+			}
+		}
+		return pieces;
+	}
+	
+	public int[] getWhitePieceIndividualCount()
+	{
+		int[] pieces = new int[10];
+		for(int i = 0; i<tiles.length; i++)
+		{
+			for(int j = 0; j<tiles[i].length; j++)
+			{
+				if(tiles[i][j].getPieceOnTile() != null)
+				{
+					if(tiles[i][j].getPieceOnTile().getWhite())
+						pieces[tiles[i][j].getPieceOnTile().getValue()]++;;
 				}
 			}
 		}
